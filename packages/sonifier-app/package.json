@@ -2,6 +2,7 @@
   "name": "sonifier-app",
   "private": true,
   "version": "0.0.0",
+  "description": "Demo application showcasing the sonifiers-core library capabilities.",
   "type": "module",
   "scripts": {
     "dev": "vite",

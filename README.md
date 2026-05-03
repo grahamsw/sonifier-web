@@ -1,17 +1,19 @@
 # Sonifier Web
 
-A professional web-based sonification toolkit. This project provides a standalone library for real-time data sonification and a modular dashboard for configuring and testing various synthesizer engines.
+A professional web-based sonification toolkit. The primary product is a standalone library for real-time data sonification, supported by a demo application for configuration and testing.
 
 ## Project Structure
 
 This is a monorepo managed with npm workspaces:
 
-- **`packages/sonifiers-core`**: The heart of the toolkit. A zero-dependency, TypeScript library for mapping data to WebAudio synthesizers.
-- **`packages/sonifier-app`**: A sample Vue 3 application that demonstrates the library's capabilities, including dynamic mapping, real-time data simulation, and multi-synth orchestration.
+- **`packages/sonifiers-core`**: **The Toolkit**. A zero-dependency, TypeScript library for mapping data to WebAudio synthesizers. This is the primary integration point for external clients.
+- **`packages/sonifier-app`**: **The Demo**. A sample Vue 3 application that demonstrates the library's capabilities. It serves as a reference implementation and dashboard for testing synths.
+
+> **Note**: Clients of the library are responsible for implementing any user interface required for their specific application (e.g., custom volume sliders, data binding UIs). The library provides the core logic and parameters.
 
 ## Architecture
 
-This project follows a modular architecture designed for real-time performance and framework independence.
+This project follows a modular architecture designed for real-time performance and framework independence. The library (`sonifiers-core`) is strictly decoupled from any UI framework.
 
 ### System Context
 
@@ -20,11 +22,13 @@ C4Context
     title System Context Diagram for Sonifier Web
 
     Person(user, "User/Researcher", "A person who wants to listen to data trends through sonification.")
-    System(sonifierWeb, "Sonifier Web", "Provides tools to map data streams to audio parameters and play them back in real-time.")
+    System(sonifierWeb, "Sonifiers Core Library", "Provides tools to map data streams to audio parameters and play them back in real-time.")
     System_Ext(dataStream, "Data Stream Source", "External source of numerical data (e.g., live sensors, historical CSV).")
+    System_Ext(clientApp, "Client Application", "An external application integrating the library.")
 
-    Rel(user, sonifierWeb, "Configures mappings and listens to audio")
-    Rel(dataStream, sonifierWeb, "Provides raw numerical data")
+    Rel(user, clientApp, "Interacts with UI")
+    Rel(clientApp, sonifierWeb, "Uses for sonification")
+    Rel(dataStream, clientApp, "Provides raw numerical data")
 ```
 
 ### Container Diagram
@@ -36,19 +40,19 @@ C4Container
     Person(user, "User", "Configures and listens.")
 
     Container_Boundary(c1, "Sonifier Web Workspace") {
-        Container(sonifierApp, "Sonifier Dashboard (Vue)", "Vue.js, TypeScript", "The UI for selecting sonifiers and configuring mappings.")
         Container(sonifierCore, "Sonifiers Core (Library)", "TypeScript, WebAudio", "Core logic for data mapping and audio synthesis.")
+        Container(sonifierApp, "Sonifier Demo App (Vue)", "Vue.js, TypeScript", "Reference UI for selecting sonifiers and configuring mappings.")
     }
 
     System_Ext(dataStream, "Data Stream Source", "Numerical data.")
 
-    Rel(user, sonifierApp, "Interacts with UI", "Web Browser")
+    Rel(user, sonifierApp, "Interacts with Demo UI", "Web Browser")
     Rel(dataStream, sonifierApp, "Feeds data to", "Events/Interval")
     Rel(sonifierApp, sonifierCore, "Uses", "TypeScript API")
     Rel(sonifierCore, user, "Plays audio", "WebAudio API")
 ```
 
-For a deeper dive into the internal components of the library, see the full [Architecture Documentation](./ARCHITECTURE.md).
+For a deeper dive into the internal components of the library and its relationship with client applications, see the [Architecture Documentation](./ARCHITECTURE.md).
 
 ## Features
 
@@ -75,24 +79,9 @@ cd sonifier-web
 npm install
 ```
 
-### Development
+### Using the Library
 
-To start the sample application with real-time feedback from library changes:
-
-```bash
-npm run dev
-```
-
-This will build the `sonifiers-core` library and start the `sonifier-app` dev server.
-
-### Building for Production
-
-```bash
-# Build both the library and the application
-npm run build
-```
-
-## Usage (Core Library)
+Clients should depend on `@sonifier-web/sonifiers-core` (or the local `packages/sonifiers-core` path in this repo).
 
 ```typescript
 import { library, Runner } from 'sonifiers-core';
@@ -113,6 +102,16 @@ runner.start();
 // 4. Feed your data stream
 runner.feedAll(42.5);
 ```
+
+### Running the Demo Application
+
+To see the library in action using the included dashboard:
+
+```bash
+npm run dev
+```
+
+This starts the `sonifier-app` dev server.
 
 ## License
 
