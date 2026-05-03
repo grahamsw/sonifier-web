@@ -1,7 +1,7 @@
 # Capability: Sonifiers Core
 
 ## Purpose
-TBD - Defines the core synth lifecycle and parameter models.
+Defines the core synthesizer lifecycle, parameter models, and the standardized interface that all sonification engines must implement. This ensures consistency across different synthesis types and facilitates seamless integration with the mapping system.
 
 ## Requirements
 

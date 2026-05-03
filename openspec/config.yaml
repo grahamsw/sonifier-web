@@ -1,20 +1,32 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# Project context
+context: |
+  Project: Sonifier Web
+  A professional web-based sonification toolkit and dashboard.
+  
+  Tech Stack:
+  - Language: TypeScript
+  - Framework: Vue 3 (packages/sonifier-app)
+  - Audio: WebAudio API (Zero dependencies like Tone.js)
+  - Monorepo: npm workspaces
+  
+  Architecture:
+  - sonifiers-core: Library for data mapping and audio synthesis.
+  - sonifier-app: Dashboard for configuration and visualization.
+  
+  Conventions:
+  - 0-1 Normalization for internal synth parameters.
+  - Silent initialization via immediate WebAudio setters.
+  - Dual gain structure (master + gate) for zero leakage.
+  - Unidirectional data flow: Runner -> Mapping -> Sonifier.
+  - Conventional commits are preferred.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+# Per-artifact rules
+rules:
+  spec:
+    - Focus on behavioral requirements and scenarios.
+    - Ensure WebAudio safety and performance are considered.
+  change:
+    - Break down implementation into clear, logical tasks.
+    - Always include validation steps for both the library and the app.

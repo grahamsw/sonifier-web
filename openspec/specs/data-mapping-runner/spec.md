@@ -1,7 +1,7 @@
 # Capability: Data Mapping Runner
 
 ## Purpose
-TBD - Handles the mapping of data to synth parameters and manages the execution state.
+Provides the high-level orchestration layer that maps incoming data streams to synthesizer parameters. It manages the execution state of the sonifier and implements various mapping strategies (Static and Dynamic) to transform domain data into normalized audio control signals.
 
 ## Requirements
 

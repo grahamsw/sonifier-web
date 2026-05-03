@@ -1,7 +1,7 @@
 # Capability: Sonifier Registry
 
 ## Purpose
-TBD - Central registry for discovering and instantiating sonifiers.
+Acts as a central discovery and factory system for all available sonifiers in the toolkit. It allows clients to query supported synthesis engines, retrieve their metadata for UI generation, and instantiate them as ready-to-use Runners.
 
 ## Requirements
 

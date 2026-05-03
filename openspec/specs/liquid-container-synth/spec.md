@@ -1,7 +1,7 @@
 # Liquid Container Synth
 
 ## Purpose
-TBD - Physical modeling synthesizer simulating the resonance of liquid in a container.
+Implements a physical modeling synthesizer that simulates the resonant properties of a liquid-filled container. It focuses on providing an organic, "fluid" auditory response to data, making it ideal for continuous streams where natural transitions are desired.
 
 ## Requirements
 
