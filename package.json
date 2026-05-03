@@ -1,0 +1,13 @@
+{
+  "name": "sonifier-web",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run build -w packages/sonifiers-core && npm run dev -w packages/sonifier-app",
+    "build": "npm run build --workspaces",
+    "test": "npm test --workspaces",
+    "pack:test": "npm run build -w packages/sonifiers-core && npm pack -w packages/sonifiers-core"
+  }
+}
