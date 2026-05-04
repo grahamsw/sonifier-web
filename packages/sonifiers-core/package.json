@@ -6,15 +6,17 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
+      "require": "./dist/cjs/index.js",
       "types": "./dist/index.d.ts"
     }
   },
-  "main": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc && npm run build:cjs",
-    "build:cjs": "tsc --module commonjs --outDir dist --moduleResolution node --target esnext --declaration false && move dist\\index.js dist\\index.cjs",
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --outDir dist/cjs --moduleResolution node --target esnext --declaration false && node -e \"require('fs').writeFileSync('dist/cjs/package.json', '{\\\"type\\\": \\\"commonjs\\\"}')\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
