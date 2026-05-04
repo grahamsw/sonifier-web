@@ -6,6 +6,7 @@
 export {
   Sonifier,
   SonifierDescriptor,
+  SonifierRegistration,
   ParameterDescriptor,
   NumberParameterDescriptor,
   EnumParameterDescriptor,

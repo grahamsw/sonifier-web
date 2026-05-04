@@ -115,3 +115,12 @@ export interface Sonifier {
    */
   getAmplitude(): number;
 }
+
+/**
+ * A registered sonifier entry in the library.
+ * The factory function creates a new independent instance each time.
+ */
+export interface SonifierRegistration {
+  descriptor: SonifierDescriptor;
+  factory: () => Sonifier;
+}

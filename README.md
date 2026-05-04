@@ -113,6 +113,20 @@ npm run dev
 
 This starts the `sonifier-app` dev server.
 
+### Pluggable Architecture
+
+The library supports external sonifier providers. You can register multiple sonifiers at once using `library.registerMany()`.
+
+```typescript
+import { library } from 'sonifiers-core';
+import { myCustomSonifiers } from 'my-sonifier-library';
+
+// Register a collection of sonifiers
+library.registerMany(myCustomSonifiers);
+```
+
+External providers should export a collection of `SonifierRegistration` objects.
+
 ## License
 
 ISC

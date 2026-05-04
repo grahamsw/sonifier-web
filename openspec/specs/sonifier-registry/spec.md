@@ -25,3 +25,10 @@ The registry SHALL provide a list of all registered sonifiers and their metadata
 #### Scenario: Populating a Menu
 - **WHEN** a client calls `list()`
 - **THEN** it returns an array of descriptors for all registered sonifier types
+
+### Requirement: Extensible Registry
+The `SonifierLibrary` SHALL allow for extension via external registrations to support a pluggable architecture.
+
+#### Scenario: Discovering Plugin Synths
+- **WHEN** a plugin registers new synths
+- **THEN** they appear alongside built-in synths in the `list()` output.

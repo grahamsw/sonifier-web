@@ -1,14 +1,5 @@
-import { Sonifier, SonifierDescriptor } from './types.js';
+import { Sonifier, SonifierDescriptor, SonifierRegistration } from './types.js';
 import { Runner } from './Runner.js';
-
-/**
- * A registered sonifier entry in the library.
- * The factory function creates a new independent instance each time.
- */
-export interface SonifierRegistration {
-  descriptor: SonifierDescriptor;
-  factory: () => Sonifier;
-}
 
 /**
  * The library is a registry of available sonifier types.
@@ -20,6 +11,13 @@ export class SonifierLibrary {
   /** Register a sonifier type, making it available for selection */
   register(registration: SonifierRegistration): void {
     this.registrations.set(registration.descriptor.name, registration);
+  }
+
+  /** Bulk register multiple sonifiers */
+  registerMany(registrations: Iterable<SonifierRegistration>): void {
+    for (const registration of registrations) {
+      this.register(registration);
+    }
   }
 
   /** List all registered sonifiers — enough info to populate a picker UI */

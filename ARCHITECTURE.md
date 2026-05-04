@@ -1,10 +1,10 @@
 # Sonifier Web Architecture
 
-This document describes the architecture of the Sonifier Web project, distinguishing between the core library and the demonstration application.
+This document describes the architecture of the Sonifier Web project, distinguishing between the core library, the demonstration application, and the plugin ecosystem.
 
 ## System Context Diagram
 
-The Sonifiers Core Library is the central component, intended to be integrated into various client applications.
+The Sonifiers Core Library is the central component, intended to be integrated into various client applications and extended by third-party sonifier providers.
 
 ```mermaid
 C4Context
@@ -14,10 +14,12 @@ C4Context
     System(sonifierWeb, "Sonifiers Core Library", "Provides tools to map data streams to audio parameters and play them back in real-time.")
     System_Ext(dataStream, "Data Stream Source", "External source of numerical data (e.g., live sensors, historical CSV).")
     System_Ext(clientApp, "Client Application", "An external application integrating the library.")
+    System_Ext(provider, "Sonifier Provider", "External library or package providing custom sonifier implementations.")
 
     Rel(user, clientApp, "Interacts with UI")
     Rel(clientApp, sonifierWeb, "Uses for sonification")
     Rel(dataStream, clientApp, "Provides raw numerical data")
+    Rel(provider, sonifierWeb, "Registers custom sonifiers", "SonifierRegistration")
 ```
 
 ## Container Diagram
@@ -36,16 +38,18 @@ C4Container
     }
 
     System_Ext(dataStream, "Data Stream Source", "Numerical data.")
+    System_Ext(provider, "External Provider", "NPM Package", "Provides additional synths.")
 
     Rel(user, sonifierApp, "Interacts with Demo UI", "Web Browser")
     Rel(dataStream, sonifierApp, "Feeds data to", "Events/Interval")
     Rel(sonifierApp, sonifierCore, "Uses", "TypeScript API")
+    Rel(provider, sonifierCore, "Registers via", "library.registerMany()")
     Rel(sonifierCore, user, "Plays audio", "WebAudio API")
 ```
 
 ## Component Diagram (sonifiers-core)
 
-The `sonifiers-core` library is designed to be framework-agnostic and standalone.
+The `sonifiers-core` library is designed to be framework-agnostic, standalone, and highly extensible.
 
 ```mermaid
 C4Component
@@ -58,12 +62,15 @@ C4Component
         Component(mapping, "Mapping Engine", "Classes", "Transforms raw data to 0-1 range (Static/Dynamic).")
         Component(sonifierBase, "BaseSonifier", "Abstract Class", "Handles WebAudio context and master/gate gain.")
         Component(synths, "Synthesizers", "Classes", "Specific audio implementations (Liquid, Mallet, Purr).")
+        Component(registry, "SonifierLibrary", "Class", "Central registry for built-in and external sonifiers.")
     }
 
     Rel(clientApp, runner, "Calls feed()/updateState()")
+    Rel(clientApp, registry, "Registers/Discovers synths")
     Rel(runner, mapping, "Uses for normalization")
     Rel(runner, synths, "Sets normalized parameters")
     Rel(synths, sonifierBase, "Inherits from")
+    Rel(registry, synths, "Instantiates")
 ```
 
 ## UI & Integration Boundaries
@@ -71,12 +78,15 @@ C4Component
 A key architectural principle of Sonifier Web is the separation of audio logic from user interface.
 
 - **Library Responsibility**: The `sonifiers-core` library handles all audio synthesis, parameter management, and data mapping logic. It exposes a normalized 0-1 interface for all parameters.
-- **Client Responsibility**: The client application (whether it's the included `sonifier-app` demo or an external product) is responsible for:
-    - Implementing the user interface (sliders, toggles, menus).
-    - Managing the application state and data sourcing.
-    - Binding UI elements to library parameters via the `Runner` and `SonifierLibrary` APIs.
+- **Client Responsibility**: The client application is responsible for UI implementation, state management, and binding UI elements to library parameters.
 
-The `sonifier-app` serves as a comprehensive example of how to implement these client-side responsibilities.
+## Pluggability & Extension
+
+The system supports a **Pluggable Architecture** via the `SonifierLibrary`.
+
+1. **SonifierRegistration**: External providers define their sonifiers using a standard registration object containing a `descriptor` (metadata) and a `factory` function.
+2. **Bulk Registration**: The `library.registerMany()` method allows for easy integration of entire synth collections from external packages.
+3. **Type Safety**: The core library exports the `Sonifier` interface and `SonifierRegistration` types to ensure third-party implementations are compatible.
 
 ## Data Flow
 
